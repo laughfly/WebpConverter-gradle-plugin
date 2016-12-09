@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.android.tools.build:gradle:2.2.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allGroovy
+    classifier = 'sources'
+}
+
+
+task javadocJar(type: Jar, dependsOn: groovydoc) {
+    from groovydoc.destinationDir
+    classifier = 'javadoc'
+}
+
+group = 'im.laughfly.plugin'
+version = '1.0'
