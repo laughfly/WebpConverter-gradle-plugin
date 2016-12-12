@@ -1,4 +1,4 @@
-package plugin
+package im.laughfly.plugins
 
 import com.android.build.gradle.AppPlugin
 import org.gradle.api.Plugin
@@ -51,7 +51,7 @@ public class WebpConverter implements Plugin<Project> {
                                 }
                             }
                             if (!isInWhiteList && shouldConvert(apiLevel, imageFile)) {
-                                def picName = name[0..webpFileName.lastIndexOf('.')-1]
+                                def picName = name[0..name.lastIndexOf('.')-1]
                                 printLog "find target pic >>>>>>>>>>>>>" + name
                                 def webpFile = new File("${drawDir}/${picName}.webp")
                                 def cwebp = [
@@ -87,7 +87,6 @@ public class WebpConverter implements Plugin<Project> {
                 project.tasks.findByName(webpConvertPlugin).dependsOn dx.taskDependencies.getDependencies(dx)
                 dx.dependsOn project.tasks.findByName(webpConvertPlugin)
             }
-
         }
     }
 
@@ -96,7 +95,7 @@ public class WebpConverter implements Plugin<Project> {
             return false
         printLog "check file:" + file.name
         //Transparency/Alpha channel requires api 18
-        if (!config.apiCompat || apiLevel >= 18) {
+        if (!config.api18Compat || apiLevel >= 18) {
             return file.name.matches(/.+\.(jpg|png)$/)
         } else {
             return file.name.matches(/.+\.(jpg|png)$/) && !ImageIO.read(file).colorModel.hasAlpha()
@@ -109,5 +108,16 @@ public class WebpConverter implements Plugin<Project> {
             println msg
         }
     }
+
+}
+
+class WebpConfig {
+    boolean skipDebug = true
+    boolean showLog = false
+    //cwebp executable path
+    String cwebp = "cwebp"
+    int quality = 80
+    boolean enabled = true
+    boolean api18Compat = true
 }
 

@@ -1,4 +1,5 @@
 apply plugin: 'groovy'
+apply plugin: 'maven'
 
 dependencies {
     compile gradleApi()
@@ -9,17 +10,11 @@ dependencies {
 repositories {
     mavenCentral()
 }
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allGroovy
-    classifier = 'sources'
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+        }
+    }
 }
-
-
-task javadocJar(type: Jar, dependsOn: groovydoc) {
-    from groovydoc.destinationDir
-    classifier = 'javadoc'
-}
-
-group = 'im.laughfly.plugin'
-version = '1.0'
+apply from: 'bintrayUpload.gradle'
